@@ -1,0 +1,29 @@
+{
+  "name": "valentine",
+  "version": "1.0.0",
+  "description": "Browser based chess platform for the ultimate modern fashioned way to play chess online.",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FelixKlauke/valentine.git"
+  },
+  "keywords": [
+    "chess",
+    "online",
+    "play",
+    "game"
+  ],
+  "author": "Felix Klauke",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FelixKlauke/valentine/issues"
+  },
+  "homepage": "https://github.com/FelixKlauke/valentine#readme"
+}
