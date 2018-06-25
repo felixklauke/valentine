@@ -4,7 +4,7 @@
 node_modules/
 
 # SASS build files
-build
+public/build
 
 ###########################
 ### IntelliJ / PHPStorm ###

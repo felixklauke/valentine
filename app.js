@@ -16,15 +16,18 @@ app.set('view engine', 'twig');
  */
 app.use(sassMiddleware({
     src: path.join(__dirname, 'assets'),
-    dest: path.join(__dirname, 'build'),
+    dest: path.join(__dirname, 'public/build'),
     outputStyle: 'compressed',
-    prefix: '/vendor'
+    prefix: '/vendor',
 }));
 
 /**
- * Expose public directory.
+ * Expose directories and library access.
  */
-app.use('/public', express.static(path.join(__dirname, 'build')));
+app.use('/vendor', express.static(path.join(__dirname, 'public/build')));
+app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+app.use('/popper', express.static(path.join(__dirname, 'node_modules/popper.js/dist')));
+app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
 
 /**
  * Routing configuration.
