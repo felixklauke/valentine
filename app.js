@@ -32,9 +32,8 @@ app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstra
 /**
  * Routing configuration.
  */
-app.get('/', function (request, response) {
-    response.render('index.html.twig', {'name': 'John Doe'})
-});
+const dashboardController = require('./routes/dashboardController');
+app.use('/', dashboardController);
 
 /**
  * Let teh server listen for requests on a certain port.
