@@ -3,6 +3,9 @@
 ##############
 node_modules/
 
+# SASS build files
+build
+
 ###########################
 ### IntelliJ / PHPStorm ###
 ###########################
