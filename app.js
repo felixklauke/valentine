@@ -3,6 +3,7 @@
  */
 let express = require('express');
 let sassMiddleware = require('node-sass-middleware');
+let passport = require('passport');
 let path = require('path');
 let app = express();
 
