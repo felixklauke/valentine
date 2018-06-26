@@ -25,9 +25,15 @@ let connectionString = 'mongodb://'
     + process.env.DATABASE_PASSWORD + '@'
     + process.env.DATABASE_HOST + ':'
     + process.env.DATABASE_PORT + '/'
+    + process.env.DATABASE_NAME + '?authSource='
     + process.env.DATABASE_NAME;
 
+console.log('Connecting via ' + connectionString);
 let promise = mongoose.connect(connectionString);
+
+promise.then(function () {
+    console.log("Successfully connected to database.")
+});
 
 /**
  * Set templating engine to twig.
@@ -47,6 +53,9 @@ app.use(sassMiddleware({
 /**
  * Authentication strategy.
  */
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
 let GoogleStrategy = passportGoogleOAuth.Strategy;
 passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
@@ -54,9 +63,31 @@ passport.use(new GoogleStrategy({
         callbackURL: "https://d3adspace.de/auth/google/callback"
     },
     function (accessToken, refreshToken, profile, callback) {
-        new User({name: profile.id}).save();
+        let userPromise = User.findOne({'auth.googleId': profile.id}).exec();
+
+        userPromise.then(function (user) {
+            if (user != null) {
+                return callback(null, user)
+            }
+
+            let newUser = new User({'auth.googleId': profile.id});
+            newUser.save(function () {
+                return callback(null, newUser);
+            })
+        })
     }
 ));
+
+passport.serializeUser(function (user, done) {
+    done(null, user.auth.googleId);
+});
+
+// used to deserialize the user
+passport.deserializeUser(function (id, done) {
+    User.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
 
 /**
  * Expose directories and library access.
@@ -73,7 +104,7 @@ const dashboardController = require('./routes/dashboardController');
 app.use('/', dashboardController);
 
 app.get('/auth/google', passport.authenticate('google', {scope: ['profile']}));
-app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/login'}), function (req, res) {
+app.get('/auth/google/callback', passport.authenticate('google', {failureRedirect: '/'}), function (req, res) {
     res.redirect('/');
 });
 
