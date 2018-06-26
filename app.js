@@ -6,6 +6,7 @@ let sassMiddleware = require('node-sass-middleware');
 let dotenv = require('dotenv');
 let passport = require('passport');
 let passportGoogleOAuth = require('passport-google-oauth20');
+let mongoose = require('mongoose');
 let path = require('path');
 let app = express();
 
@@ -13,6 +14,18 @@ let app = express();
  * Environment variables
  */
 dotenv.config();
+
+/**
+ * Connect to database
+ */
+let connectionString = 'mongodb://'
+    + process.env.DATABASE_USER + ':'
+    + process.env.DATABASE_PASSWORD + '@'
+    + process.env.DATABASE_HOST + ':'
+    + process.env.DATABASE_PORT + '/'
+    + process.env.DATABASE_NAME;
+
+let promise = mongoose.connect(connectionString);
 
 /**
  * Set templating engine to twig.
