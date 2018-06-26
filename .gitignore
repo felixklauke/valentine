@@ -10,3 +10,8 @@ public/build
 ### IntelliJ / PHPStorm ###
 ###########################
 .idea
+
+###################
+### Environment ###
+###################
+.env
