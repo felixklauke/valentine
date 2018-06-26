@@ -10,6 +10,8 @@ let mongoose = require('mongoose');
 let path = require('path');
 let app = express();
 
+let User = require('./models/User');
+
 /**
  * Environment variables
  */
@@ -52,7 +54,7 @@ passport.use(new GoogleStrategy({
         callbackURL: "https://d3adspace.de/auth/google/callback"
     },
     function (accessToken, refreshToken, profile, callback) {
-
+        new User({name: profile.id}).save();
     }
 ));
 
