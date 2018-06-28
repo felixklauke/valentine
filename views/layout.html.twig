@@ -9,3 +9,36 @@
     <script href="/popper/popper.js"></script>
     <script href="/bootstrap/js/bootstrap.js"></script>
 {% endblock %}
+
+{% block bodyContent %}
+    <header>
+        <nav class="navbar navbar-dark bg-dark navbar-expand-sm">
+            <div class="navbar-brand">
+                Valentine
+            </div>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    {% block pageContent %}
+                    {% endblock %}
+                </div>
+
+                <div class="col-sm-4">
+                    {% block sidebarContent %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
