@@ -4,6 +4,8 @@ let Schema = mongoose.Schema;
 let userSchema = new Schema({
     id: Schema.Types.ObjectId,
     name: String,
+    email: String,
+
     auth: {
         googleId: String
     }

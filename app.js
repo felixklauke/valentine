@@ -8,6 +8,9 @@ let passport = require('passport');
 let passportGoogleOAuth = require('passport-google-oauth20');
 let mongoose = require('mongoose');
 let path = require('path');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let session = require('express-session');
 let app = express();
 
 let User = require('./models/User');
@@ -50,11 +53,15 @@ app.use(sassMiddleware({
     prefix: '/vendor',
 }));
 
+app.use(cookieParser());
+app.use(bodyParser());
+app.use(session({secret: 'keyboard cat'}));
+
 /**
  * Authentication strategy.
  */
 app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
+app.use(passport.session());
 
 let GoogleStrategy = passportGoogleOAuth.Strategy;
 passport.use(new GoogleStrategy({
@@ -70,10 +77,20 @@ passport.use(new GoogleStrategy({
                 return callback(null, user)
             }
 
-            let newUser = new User({'auth.googleId': profile.id});
-            newUser.save(function () {
+            let newUser = new User({
+                'auth.googleId': profile.id,
+                'email': profile.email,
+                'name': profile.name
+            });
+
+            userPromise = newUser.insert(function (error) {
+                if (error) {
+                    console.log(error);
+                    return;
+                }
+
                 return callback(null, newUser);
-            })
+            }).exec()
         })
     }
 ));
@@ -84,7 +101,7 @@ passport.serializeUser(function (user, done) {
 
 // used to deserialize the user
 passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
+    User.findOne({'auth.googleId': id}, function (err, user) {
         done(err, user);
     });
 });
